@@ -36,4 +36,14 @@ public class SortTest {
         sort.mergeSort(sortArray);
         Assert.assertEquals("[]", Arrays.toString(sortArray));
     }
+
+    @Test
+    public void testBubbleSort() {
+        int[] sortArray = array;
+        sort.bubbleSort(sortArray);
+        Assert.assertEquals("[1, 3, 4, 5, 10, 11, 12, 12, 12, 21, 23, 24, 25, 25, 30]", Arrays.toString(sortArray));
+        sortArray = new int[0];
+        sort.bubbleSort(sortArray);
+        Assert.assertEquals("[]", Arrays.toString(sortArray));
+    }
 }

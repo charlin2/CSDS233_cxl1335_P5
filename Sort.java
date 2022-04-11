@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -24,7 +25,7 @@ public class Sort {
     }
 
     /**
-     * Sorts an array in ascending order using quick sort
+     * Sorts an array in ascending order using quick-sort
      * @param arr the array to be sorted
      */
     public void quickSort(int[] arr) {
@@ -78,7 +79,7 @@ public class Sort {
     }
 
     /**
-     * Sorts an array in ascending order using merge sort
+     * Sorts an array in ascending order using merge-sort
      * @param arr the array to be sorted
      */
     public void mergeSort(int[] arr) {
@@ -114,14 +115,22 @@ public class Sort {
         }
     }
 
+    /**
+     * Merges two subarrays in sorted order
+     * @param arr the array to be sorted
+     * @param leftArr left subarray
+     * @param rightArr right subarray
+     */
     private static void merge(int[] arr, int[] leftArr, int[] rightArr) {
 		int leftCount = 0, rightCount = 0, arrCount = 0;
+        // replace values in main array with sorted values from left and right subarrays
 		while (leftCount < leftArr.length && rightCount < rightArr.length) {
 			if (leftArr[leftCount] < rightArr[rightCount])
 				arr[arrCount++] = leftArr[leftCount++];
 			else
 				arr[arrCount++] = rightArr[rightCount++];
 		}
+        // finish off the sorting
 		while (leftCount < leftArr.length)
 			arr[arrCount++] = leftArr[leftCount++];
 		while (rightCount < rightArr.length)
@@ -144,6 +153,26 @@ public class Sort {
         return randArr;
     }
 
+    /**
+     * Sorts an array in ascending order using bubble sort
+     * @param arr the array to be sorted
+     */
+    public void bubbleSort(int[] arr) {
+        // outer loop keeps track of how many values are sorted from the back
+        for (int i = arr.length; i > 0; i--) {
+            int j = 1;
+            // swap adjacent elements until largest value is at the end of the array
+            while (j < i) {
+                if (arr[j] < arr[j-1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j-1];
+                    arr[j-1] = temp;
+                }
+                j++;
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Sort sort = new Sort();
 
@@ -152,6 +181,13 @@ public class Sort {
         int arrSize = scan.nextInt();
         scan.close();
 
+        int[] partiallySortedArray = new int[1000]; // partially sorted array will double as sorted array
+        for (int i = 0; i < 500; i++)
+            partiallySortedArray[i] = i;
+        for (int i = 500; i < partiallySortedArray.length; i++)
+            partiallySortedArray[i] = (int)(Math.random()*1000);
+
+        /** Insertion Sort */
         double totalTime = 0;
         for (int i = 0; i < 6; i++) {
             int[] random = sort.randomArray(arrSize, 0, 1000);
@@ -160,8 +196,22 @@ public class Sort {
             double endTime = System.nanoTime();
             totalTime += (endTime - startTime);
         }
-        System.out.println("InsertionSort: " + totalTime/5 + " nanoseconds");
+        double start = System.nanoTime();
+        sort.insertionSort(partiallySortedArray);
+        double end = System.nanoTime();
+        System.out.println("InsertionSort for random arrays: " + totalTime/5 + " nanoseconds");
+        System.out.println("InsertionSort for partially sorted array: " + (end-start) + " nanoseconds");
+        start = System.nanoTime();
+        sort.insertionSort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("InsertionSort for sorted array: " + (end-start) + " nanoseconds\n");
 
+        /** Quick Sort */
+        partiallySortedArray = new int[1000];
+        for (int i = 0; i < 500; i++)
+            partiallySortedArray[i] = i;
+        for (int i = 500; i < partiallySortedArray.length; i++)
+            partiallySortedArray[i] = (int)(Math.random()*1000);
         totalTime = 0;
         for (int i = 0; i < 6; i++) {
             int[] random = sort.randomArray(arrSize, 0, 1000);
@@ -170,8 +220,22 @@ public class Sort {
             double endTime = System.nanoTime();
             totalTime += (endTime - startTime);
         }
-        System.out.println("QuickSort: " + totalTime/5 + " nanoseconds");
+        start = System.nanoTime();
+        sort.quickSort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("QuickSort for random arrays: " + totalTime/5 + " nanoseconds");
+        System.out.println("QuickSort for partially sorted array: " + (end-start) + " nanoseconds");
+        start = System.nanoTime();
+        sort.quickSort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("QuickSort for sorted array: " + (end-start) + " nanoseconds\n");
         
+        /** Merge Sort */
+        partiallySortedArray = new int[1000];
+        for (int i = 0; i < 500; i++)
+            partiallySortedArray[i] = i;
+        for (int i = 500; i < partiallySortedArray.length; i++)
+            partiallySortedArray[i] = (int)(Math.random()*1000);
         totalTime = 0;
         for (int i = 0; i < 6; i++) {
             int[] random = sort.randomArray(arrSize, 0, 1000);
@@ -180,6 +244,63 @@ public class Sort {
             double endTime = System.nanoTime();
             totalTime += (endTime - startTime);
         }
-        System.out.println("MergeSort: " + totalTime/5 + " nanoseconds");
+        start = System.nanoTime();
+        sort.mergeSort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("MergeSort for random arrays: " + totalTime/5 + " nanoseconds");
+        System.out.println("MergeSort for partially sorted array: " + (end-start) + " nanoseconds");
+        start = System.nanoTime();
+        sort.mergeSort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("MergeSort for sorted array: " + (end-start) + " nanoseconds\n");
+
+        /** Arrays Sort */
+        partiallySortedArray = new int[1000];
+        for (int i = 0; i < 500; i++)
+            partiallySortedArray[i] = i;
+        for (int i = 500; i < partiallySortedArray.length; i++)
+            partiallySortedArray[i] = (int)(Math.random()*1000);
+        totalTime = 0;
+        for (int i = 0; i < 6; i++) {
+            int[] random = sort.randomArray(arrSize, 0, 1000);
+            double startTime = System.nanoTime();
+            Arrays.sort(random);
+            double endTime = System.nanoTime();
+            totalTime += (endTime - startTime);
+        }
+        start = System.nanoTime();
+        Arrays.sort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("Arrays Sort for random arrays: " + totalTime/5 + " nanoseconds");
+        System.out.println("Arrays Sort for partially sorted array: " + (end-start) + " nanoseconds");
+        start = System.nanoTime();
+        Arrays.sort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("Arrays Sort for sorted array: " + (end-start) + " nanoseconds\n");
+
+        /** Bubble Sort */
+        partiallySortedArray = new int[1000];
+        for (int i = 0; i < 500; i++)
+            partiallySortedArray[i] = i;
+        for (int i = 500; i < partiallySortedArray.length; i++)
+            partiallySortedArray[i] = (int)(Math.random()*1000);
+        totalTime = 0;
+        for (int i = 0; i < 6; i++) {
+            int[] random = sort.randomArray(arrSize, 0, 1000);
+            double startTime = System.nanoTime();
+            sort.bubbleSort(random);
+            double endTime = System.nanoTime();
+            totalTime += (endTime - startTime);
+        }
+        start = System.nanoTime();
+        sort.bubbleSort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("BubbleSort for random arrays: " + totalTime/5 + " nanoseconds");
+        System.out.println("BubbleSort for partially sorted array: " + (end-start) + " nanoseconds");
+        start = System.nanoTime();
+        sort.bubbleSort(partiallySortedArray);
+        end = System.nanoTime();
+        System.out.println("BubbleSort for sorted array: " + (end-start) + " nanoseconds\n");
+
     }
 }
